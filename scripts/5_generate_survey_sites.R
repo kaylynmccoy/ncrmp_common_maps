@@ -209,9 +209,9 @@ for (i in 1:length(islands)) {
     unique()
   buffer_label = buffer %>% group_by(nam) %>% summarise(longitude = median(longitude), latitude = median(latitude))
   
-  ######################################
-  ### Read Island 5km buffer sectors ###
-  ######################################
+  ###################################
+  ### Read Island 5km box sectors ###
+  ###################################
   load('data/gis_survey_boxes/gua.RData')
   boxes = raster_and_table[[1]]
   boxes_name = raster_and_table[[2]]
@@ -234,12 +234,13 @@ for (i in 1:length(islands)) {
   (site_location = 
       ggplot() + 
       
-      # geom_tile(data = cells, aes(longitude, latitude, fill = factor(strat)), alpha = 0.3, width = 0.001, height = 0.001) +
-      geom_tile(data = buffer, aes(longitude, latitude, fill = nam), width = 0.001, height = 0.001, alpha = 0.1, show.legend = F) +
-      geom_tile(data = boxes, aes(longitude, latitude, fill = nam), width = 0.001, height = 0.001, alpha = 0.2, show.legend = F) +
+      geom_path(data = ISL_this, aes(long, lat, group = group), size = 0.05, color = "darkgrey") +
+      geom_polygon(data = ISL_this, aes(long, lat, group = group), fill = "darkgrey", color = NA, alpha = 1) +
       
-      geom_path(data = ISL_this, aes(long, lat, group = group), inherit.aes = F, size = 0.05, color = "darkgrey") +
-      geom_polygon(data = ISL_this, aes(long, lat, group = group), fill = "darkgrey", color = NA, alpha = 0.9) +
+      # geom_tile(data = cells, aes(longitude, latitude, fill = factor(strat)), alpha = 0.3, width = 0.001, height = 0.001) +
+      geom_tile(data = buffer, aes(longitude, latitude, fill = nam), width = 0.001, height = 0.001, alpha = 0.4, show.legend = F) +
+      #   geom_rect(data = boxes)
+      geom_tile(data = boxes, aes(longitude, latitude), width = 0.001, height = 0.001, fill = NA, color = "red", size = 2, show.legend = F) +
       
       geom_point(data = sets, aes(longitude, latitude, shape = depth_bin, color = depth_bin)) +
       
@@ -293,8 +294,7 @@ for (i in 1:length(islands)) {
   dev.off()
   
   library(pdftools)
-  pdf_combine(c("outputs/survey_geo_ref_gua_mid.pdf", "outputs/survey_table_gua_mid.pdf"), output = "outputs/survey_map_sites.pdf")
-  
+  pdf_combine(c("C:/Users/Corinne.Amir/Documents/GitHub/ncrmp_common_maps/outputs/survey_geo_ref_gua_mid.pdf", "C:/Users/Corinne.Amir/Documents/GitHub/ncrmp_common_maps/outputs/survey_table_gua_mid.pdf"), output = "C:/Users/Corinne.Amir/Documents/GitHub/ncrmp_common_maps/outputs/survey_map_sites.pdf")
   # (Area = cells %>% 
   #     group_by(strat) %>% 
   #     summarise(strat_area = mean(strat_area))%>% 
