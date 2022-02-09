@@ -135,7 +135,7 @@ for (i in 1:length(islands)) {
   sets$depth_bin = ifelse(sets$depth > 6  & sets$depth <= 18, "MID", sets$depth_bin) 
   sets$depth_bin = ifelse(sets$depth > 18, "DEEP", sets$depth_bin) 
   
-  readr::write_csv(sets, file = paste0("outputs/survey_table_", islands[i], "_", effort_level, ".csv"))
+  readr::write_csv(sets, path = paste0("outputs/survey_table_", islands[i], "_", effort_level, ".csv"))
   
   library(gridExtra)
   pdf(paste0("outputs/survey_table_", islands[i], "_", effort_level, ".pdf"), height = 12, width = 10)
