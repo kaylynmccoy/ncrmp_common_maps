@@ -3,7 +3,7 @@
 ###############################################
 rm(list = ls())
 
-library(SimSurvey)
+library(SimSurvey) # fun
 library(raster)
 library(data.table)
 library(ggplot2)
