@@ -36,15 +36,15 @@ islands = c("bak", "how", "jar", "joh", "kin", "pal", "wak"); region = "PRIAs"  
 ########################################################################
 
 # n_sims = 100 # number of simulations
-effort_level = c("low", "mid", "high")[2] # define sampling effort (low, mid, high)
-min_sets = 1 # minimum number of sets per strat
+effort_level = c("low", "mid", "high")[2] # define sampling effort (low, mid, high) # not user defined, coming from previous datasets. Can change to 'effort level = 157' for specific islands
+min_sets = 1 # minimum number of sets per strata 
 max_sets = 30
 trawl_dim = c(0.01, 0.0353) # 0.000353 sq.km (353 sq.m) from two 15-m diameter survey cylinders
 resample_cells = F
 
 
 ##################################################################
-### determine number of sites you want to deploy @ each island ###
+### determine number of sites you want to deploy @ each island ### this pulls from past data, default is 100
 ##################################################################
 
 load('data/misc/survey_effort_ncrmp_2000-2020.RData')
@@ -79,7 +79,7 @@ for (i in 1:length(islands)) {
     
   } else {
     
-    total_sample = total_sample$Effort*5
+    total_sample = total_sample$Effort*5 # this generates 5 times the number in historical datasets
     
   }
   
@@ -286,7 +286,7 @@ for (i in 1:length(islands)) {
       
       # geom_tile(data = cells, aes(longitude, latitude, fill = factor(strat)), alpha = 0.3, width = 0.001, height = 0.001) + # stratum
       
-      geom_tile(data = buffer, aes(longitude, latitude, fill = sector_nam), width = 0.001, height = 0.001, alpha = 0.3, show.legend = F) + # island sectors
+      geom_tile(data = buffer, aes(longitude, latitude, fill = sector_nam), width = 0.001, height = 0.001, alpha = 0.3, show.legend = F) + # island sectors CAN TURN THIS OFF
       geom_label_repel(data = buffer_label, aes(longitude, latitude, label = sector_nam, fill = sector_nam, fontface = 'bold'), color = "white", max.overlaps = Inf, show.legend = F) +
       
       scale_fill_discrete() + 
