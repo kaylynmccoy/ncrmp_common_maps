@@ -23,10 +23,10 @@ utm = read_csv('data/misc/ncrmp_utm_zones.csv')
 ###  select islands & regions  ###
 ##################################
 
-islands = c("gua", "rot", "sai", "tin", "agu"); region = "S.MARIAN"                           # South Mariana Islands
-islands = c("agr", "ala", "asc", "gug", "fdp", "mau", "pag", "sar"); region = "N.MARIAN"      # North Mariana Islands
+#islands = c("gua", "rot", "sai", "tin", "agu"); region = "S.MARIAN"                           # South Mariana Islands
+#islands = c("agr", "ala", "asc", "gug", "fdp", "mau", "pag", "sar"); region = "N.MARIAN"      # North Mariana Islands
 islands = c("ofu", "ros", "swa", "tau", "tut"); region = "SAMOA"                              # American Samoa
-islands = c("bak", "how", "jar", "joh", "kin", "pal", "wak"); region = "PRIAs"              # Pacific Remote Island Areas
+#islands = c("bak", "how", "jar", "joh", "kin", "pal", "wak"); region = "PRIAs"              # Pacific Remote Island Areas
 # islands = c("haw", "kah", "kal", "kau", "lan", "mai", "mol", "nii", "oah"); region = "MHI"  # Main Hawaiian Islands
 # islands = c("ffs", "kur", "lay", "lis", "mar", "mid", "phr"); region = "NWHI"               # Northern Hawaiian Islands
 
@@ -64,9 +64,9 @@ crs(ISL_bounds) = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
 ### Generate survey site tables & maps, check outputs/ folder ###
 #################################################################
 
-for (i in 1:length(islands)) {
+#for (i in 1:length(islands)) {
   
-  i = 4
+  i = 2
   
   # survey domain with sector & reef & hard_unknown & 3 depth bins
   load(paste0("data/survey_grid_ncrmp/survey_grid_", islands[i], ".RData")) 
@@ -79,7 +79,7 @@ for (i in 1:length(islands)) {
     
   } else {
     
-    total_sample = total_sample$Effort*5 # this generates 5 times the number in historical datasets
+    total_sample = total_sample$Effort*2 # this generates 5 times the number in historical datasets
     
   }
   
@@ -248,35 +248,35 @@ for (i in 1:length(islands)) {
 
   }
   
-  # ISL_this <- crop(ISL_this, extent(144.62, 144.71, 13.24, 13.65))
+  # ISL_this <- crop(ISL_this, extent(-170.849722,-170.740278,-14.373056,-14.285)) # x min, x max, ymin, ymax
   # 
-  # buffer = buffer %>% subset(longitude > 144.62 &  
-  #                              longitude < 144.71 & 
-  #                              latitude > 13.24 & 
-  #                              latitude < 13.65)
   # 
-  # buffer_label = buffer_label %>% subset(longitude > 144.62 &  
-  #                                          longitude < 144.71 & 
-  #                                          latitude > 13.24 & 
-  #                                          latitude < 13.65)
+  # buffer = buffer %>% subset(longitude > -170.849722 &
+  #                              longitude < -170.740278 &
+  #                              latitude > -14.373056 &
+  #                              latitude < -14.285)
   # 
-  # boxes_hulls = boxes_hulls %>% subset(longitude > 144.62 &  
-  #                                        longitude < 144.71 & 
-  #                                        latitude > 13.24 & 
-  #                                        latitude < 13.65)
+  #  buffer_label = buffer_label %>% subset(longitude > -170.849722 &
+  #                                           longitude < -170.740278 &
+  #                                           latitude > -14.373056 &
+  #                                           latitude < -14.285)
   # 
-  # boxes_label = boxes_label %>% subset(longitude > 144.62 &  
-  #                                        longitude < 144.71 & 
-  #                                        latitude > 13.24 & 
-  #                                        latitude < 13.65)
+  #  boxes_hulls = boxes_hulls %>% subset(longitude > -170.849722 &
+  #                                         longitude < -170.740278 &
+  #                                         latitude > -14.373056 &
+  #                                         latitude < -14.285)
   # 
-  # sets = sets %>% subset(longitude > 144.62 &  
-  #                          longitude < 144.71 & 
-  #                          latitude > 13.24 & 
-  #                          latitude < 13.65)
-  
+  #  boxes_label = boxes_label %>% subset(longitude > -170.849722 &
+  #                                         longitude < -170.740278 &
+  #                                         latitude > -14.373056 &
+  #                                         latitude < -14.285)
+  # 
+  #  sets = sets %>% subset(longitude > -170.849722 &
+  #                           longitude < -170.740278 &
+  #                           latitude > -14.373056 &
+  #                           latitude < -14.285)
   # ggdark::invert_geom_defaults()
-  
+
   (site_location = 
       
       ggplot() + 
@@ -304,7 +304,13 @@ for (i in 1:length(islands)) {
       {if(Switch) new_scale_fill()} +
   
       # geom_point(data = sets, aes(longitude, latitude, shape = depth_bin, color = depth_bin)) +
-      geom_spatial_point(data = sets, aes(longitude, latitude, shape = depth_bin, color = depth_bin),  crs = 4326) + 
+      geom_spatial_point(data = sets, aes(longitude, latitude, shape = depth_bin, color = depth_bin, size=4),  crs = 4326) + 
+      scale_shape_manual(values = c("DEEP"= 17,
+                                    "MID"= 15,
+                                    "SHAL"= 16))+ # change shapes to deep=triangle(17),mid=square(15) shallow= circle (16)
+      scale_color_manual(values = c("SHAL" = "darkgreen",
+                                    "MID"="darkorange",
+                                    "DEEP"="red"))+
       annotation_scale(location = "br", width_hint = 0.2) +
       
       # new_scale_color() +
@@ -312,9 +318,9 @@ for (i in 1:length(islands)) {
       
       geom_label_repel(data = sets, 
                        aes(longitude, latitude, label = id),
-                       size = 2,
+                       size = 5, # original = 2
                        label.size = NA, 
-                       alpha = 0.75, 
+                       alpha = 0.75, # original = 0.75
                        fontface = 'bold', 
                        color = 'black',
                        max.overlaps = Inf,
@@ -395,4 +401,4 @@ for (i in 1:length(islands)) {
   #     coord_flip() + 
   #     theme_minimal())
   
-}
+#}
